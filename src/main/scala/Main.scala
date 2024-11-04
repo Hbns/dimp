@@ -1,12 +1,12 @@
-// Define a trait for terms, which can be either constants or variables
+// Trait for terms, which can be either constants or variables
 sealed trait Term
 case class Constant(value: String) extends Term
 case class Variable(name: String) extends Term
 
-// Define a case class for atoms, which consist of a relation name and a tuple of terms
+// Case class for atoms, which consist of a relation name and a tuple of terms
 case class Atom(relationName: String, terms: Seq[Term])
 
-// Define a case class for the conjunctive query
+// Case class for the conjunctive query
 case class ConjunctiveQuery(
   queryId: Int,
   headAtom: Atom,
@@ -23,13 +23,53 @@ object ConjunctiveQueryUtils {
   }
 }
 
+class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
+
+  // Method to add a mapping
+  def addMapping(from: Term, to: Term): Homomorphism = {
+    new Homomorphism(mapping + (from -> to))
+  }
+
+  // Method to retrieve a mapping
+  def apply(term: Term): Option[Term] = {
+    mapping.get(term)
+  }
+
+  // Method to get all mappings
+  def getAllMappings: Map[Term, Term] = {
+    mapping
+  }
+
+  // Override toString for better readability
+  override def toString: String = {
+    mapping.toString()
+  }
+}
+
+// Define a case class for the hypergraph
+case class Hypergraph(edges: Set[Set[Term]]) {
+  def isEmpty: Boolean = edges.isEmpty
+}
+
+object Hypergraph {
+  def fromQuery(query: ConjunctiveQuery): Hypergraph = {
+    val edges = query.bodyAtoms.map(atom => atom.terms.toSet)
+    Hypergraph(edges)
+  }
+}
+
+
 // Example usage
 @main def main(): Unit = {
   // Define some constants and variables
-  val x = Variable("X")
-  val y = Variable("Y")
+  val x = Variable("x")
+  val y = Variable("y")
+  val z = Variable("z")
+  val w = Variable("w")
+  val u = Variable("u")
   val c1 = Constant("c1")
   val c2 = Constant("c2")
+  val V = Constant("V")
 
   // Define some atoms
   val headAtom = Atom("headRelation", Seq(x, y))
@@ -43,6 +83,31 @@ object ConjunctiveQueryUtils {
     bodyAtoms = Set(bodyAtom1, bodyAtom2)
   )
 
+  val answer1 = Atom("answer", Seq())
+  val bodyA = Atom("A", Seq(x, y))
+  val bodyB = Atom("B", Seq(y, z))
+  val bodyC= Atom("C", Seq(z, w, u, V))
+
+  val query1 = ConjunctiveQuery(
+    queryId = 2,
+    headAtom = answer1,
+    bodyAtoms = Set(bodyA, bodyB, bodyC)
+  )
+
   // Print the query
   ConjunctiveQueryUtils.printQuery(query)
+
+  // Create a homomorphism
+  val homomorphism = new Homomorphism()
+    .addMapping(x, c1)
+    .addMapping(y, c2)
+
+  // Print the homomorphism
+  println(homomorphism)
+
+    // Create a hypergraph from the query
+  val hypergraph = Hypergraph.fromQuery(query1)
+
+  // Check if the hypergraph is empty
+  println(hypergraph)
 }
