@@ -59,39 +59,6 @@ case class Hypergraph(edges: Set[Set[Term]]) {
 //}
 
 object GYO {
-  def reduce(hypergraph: Hypergraph): Hypergraph = {
-    var currentHypergraph = hypergraph
-    var changed = true
-
-    while (changed) {
-      changed = false
-      val newEdges = currentHypergraph.edges.flatMap { edge =>
-        if (isEar(edge, currentHypergraph.edges)) {
-          changed = true
-          None
-        } else {
-          Some(edge)
-        }
-      }
-
-      val newHypergraph = Hypergraph(newEdges)
-      if (newHypergraph.edges != currentHypergraph.edges) {
-        changed = true
-        currentHypergraph = newHypergraph
-      }
-    }
-
-    currentHypergraph
-  }
-
-  def isEar(edge: Set[Term], edges: Set[Set[Term]]): Boolean = {
-    edge.exists { term =>
-      edges.count(_.contains(term)) == 1
-    } && edge.exists { term =>
-      edges.exists(otherEdge => otherEdge != edge && otherEdge.contains(term))
-    }
-  }
-
   def reduceQuery(body: List[Atom]): List[Atom] = {
     body match {
       case Nil => body
