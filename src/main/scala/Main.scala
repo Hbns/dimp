@@ -93,9 +93,14 @@ object GYO {
   }
 
   def isAcyclic(query: ConjunctiveQuery): Boolean = {
-    val hypergraph = Hypergraph.fromQuery(query)
-    val reducedHypergraph = reduce(hypergraph)
-    reducedHypergraph.isEmpty
+    val ba = query.bodyAtoms
+    println("acyclicTest: " + ba)
+    
+    
+    //val hypergraph = Hypergraph.fromQuery(query)
+    //val reducedHypergraph = reduce(hypergraph)
+    //println("rhg: " + reducedHypergraph)
+    //reducedHypergraph.isEmpty
   }
 
   def log(line: String): Unit = {
@@ -165,5 +170,6 @@ object GYO {
 
   // Check if the hypergraph is empty
   println(hypergraph)
-  GYO.log(hypergraph.toString())
+  //GYO.log(query1.toString())
+  println(GYO.isAcyclic(query1))
 }

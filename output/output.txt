@@ -1,1 +1,1 @@
-Hypergraph(Set(Set(Variable(x), Variable(y)), Set(Variable(y), Variable(z)), Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+ConjunctiveQuery(2,Atom(answer,List()),Set(Atom(A,List(Variable(x), Variable(y))), Atom(B,List(Variable(y), Variable(z))), Atom(C,List(Variable(z), Variable(w), Variable(u), Constant(V)))))
