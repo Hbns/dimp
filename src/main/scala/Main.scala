@@ -10,7 +10,7 @@ case class Atom(relationName: String, terms: Seq[Term])
 case class ConjunctiveQuery(
   queryId: Int,
   headAtom: Atom,
-  bodyAtoms: Set[Atom]
+  bodyAtoms: List[Atom]
 )
 
 // Define some utility methods
@@ -51,12 +51,12 @@ case class Hypergraph(edges: Set[Set[Term]]) {
   def isEmpty: Boolean = edges.isEmpty
 }
 
-object Hypergraph {
-  def fromQuery(query: ConjunctiveQuery): Hypergraph = {
-    val edges = query.bodyAtoms.map(atom => atom.terms.toSet)
-    Hypergraph(edges)
-  }
-}
+//object Hypergraph {
+///  def fromQuery(query: ConjunctiveQuery): Hypergraph = {
+//    val edges = query.bodyAtoms.map(atom => atom.terms.toSet)
+//    Hypergraph(edges)
+//  }/
+//}
 
 object GYO {
   def reduce(hypergraph: Hypergraph): Hypergraph = {
@@ -92,15 +92,22 @@ object GYO {
     }
   }
 
+  def reduceQuery(body: List[Atom]): List[Atom] = {
+    body match {
+      case Nil => body
+      case firstAtom :: restOfAtoms =>
+      println(firstAtom)
+      reduceQuery(restOfAtoms)
+
+    }
+    
+  } 
+  
   def isAcyclic(query: ConjunctiveQuery): Boolean = {
     val ba = query.bodyAtoms
-    println("acyclicTest: " + ba)
+    val reducedQuery = reduceQuery(ba) 
+    reducedQuery.isEmpty
     
-    
-    //val hypergraph = Hypergraph.fromQuery(query)
-    //val reducedHypergraph = reduce(hypergraph)
-    //println("rhg: " + reducedHypergraph)
-    //reducedHypergraph.isEmpty
   }
 
   def log(line: String): Unit = {
@@ -137,11 +144,6 @@ object GYO {
   val bodyAtom2 = Atom("bodyRelation2", Seq(y, c2))
 
   // Define a conjunctive query
-  val query = ConjunctiveQuery(
-    queryId = 1,
-    headAtom = headAtom,
-    bodyAtoms = Set(bodyAtom1, bodyAtom2)
-  )
 
   val answer1 = Atom("answer", Seq())
   val bodyA = Atom("A", Seq(x, y))
@@ -149,9 +151,9 @@ object GYO {
   val bodyC= Atom("C", Seq(z, w, u, V))
 
   val query1 = ConjunctiveQuery(
-    queryId = 2,
+    queryId = 1,
     headAtom = answer1,
-    bodyAtoms = Set(bodyA, bodyB, bodyC)
+    bodyAtoms = List(bodyA, bodyB, bodyC)
   )
 
   // Print the query
@@ -162,14 +164,6 @@ object GYO {
     .addMapping(x, c1)
     .addMapping(y, c2)
 
-  // Print the homomorphism
-  //println(homomorphism)
+  GYO.isAcyclic(query1)
 
-    // Create a hypergraph from the query
-  val hypergraph = Hypergraph.fromQuery(query1)
-
-  // Check if the hypergraph is empty
-  println(hypergraph)
-  //GYO.log(query1.toString())
-  println(GYO.isAcyclic(query1))
 }
