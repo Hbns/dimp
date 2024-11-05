@@ -1,0 +1,1 @@
+Hypergraph(Set(Set(Variable(x), Variable(y)), Set(Variable(y), Variable(z)), Set(Variable(z), Variable(w), Variable(u), Constant(V))))
