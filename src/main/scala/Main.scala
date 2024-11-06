@@ -59,27 +59,41 @@ case class Hypergraph(edges: Set[Set[Term]]) {
 //}
 
 object GYO {
-  
-  
-  
-  def reduceQuery(body: List[Atom]): List[Atom] = {
+  // maxRecursions to stop recursion in case of repeated false for witness..
+  def reduceQuery(body: List[Atom], counter: Int = 0 , maxRecursions: Int = 4): List[Atom] = {
     body match {
       case Nil => body
-      case head :: Nil => body
+      case head :: Nil => 
+        // single atomic formula, has no cycle, return empty list
+        List.empty[Atom]
+      
       case head :: restOfAtoms =>
         val headTerms = head.terms
-        restOfAtoms.foreach {atom =>
-          val terms = atom.terms
-          println(headTerms intersect terms)
-        }
+        val uniqueTerms = restOfAtoms.foldLeft(headTerms) {(acc, atom) =>
+            val terms = atom.terms
+            acc.diff(terms)
+          } 
+        val nonUniqueTerms = headTerms.diff(uniqueTerms)        
+        val witness = restOfAtoms.find(atom => atom.terms.intersect(nonUniqueTerms) == nonUniqueTerms)
+        
+        println("ut: " + uniqueTerms)
+        println("nut: " + nonUniqueTerms)
+        println("witness: " + witness)
         println("--------------------------")
-       
+      
+        witness match {
+          case Some(_) =>
+            reduceQuery(restOfAtoms, 0)
+          case None => 
+            if (counter >= maxRecursions) {
+              body
+            } else {
+              reduceQuery(restOfAtoms :+ head, counter + 1)
 
-
-
-      reduceQuery(restOfAtoms)
-
-    }
+            }
+            
+        }
+    }  
     
   } 
   
@@ -144,7 +158,8 @@ object GYO {
 ///    .addMapping(x, c1)
 //    .addMapping(y, c2)
 
-  GYO.isAcyclic(query1)
+  println(GYO.isAcyclic(query1))
+  println(GYO.isAcyclic(query2))
   //GYO.isAcyclic(query2)
 
 }
