@@ -4,7 +4,7 @@ case class Constant(value: String) extends Term
 case class Variable(name: String) extends Term
 
 // Case class for atoms, which consist of a relation name and a tuple of terms
-case class Atom(relationName: String, terms: Seq[Term])
+case class Atom(relationName: String, terms: Set[Term])
 
 // Case class for the conjunctive query
 case class ConjunctiveQuery(
@@ -59,11 +59,24 @@ case class Hypergraph(edges: Set[Set[Term]]) {
 //}
 
 object GYO {
+  
+  
+  
   def reduceQuery(body: List[Atom]): List[Atom] = {
     body match {
       case Nil => body
-      case firstAtom :: restOfAtoms =>
-      println(firstAtom)
+      case head :: Nil => body
+      case head :: restOfAtoms =>
+        val headTerms = head.terms
+        restOfAtoms.foreach {atom =>
+          val terms = atom.terms
+          println(headTerms intersect terms)
+        }
+        println("--------------------------")
+       
+
+
+
       reduceQuery(restOfAtoms)
 
     }
@@ -101,21 +114,15 @@ object GYO {
   val z = Variable("z")
   val w = Variable("w")
   val u = Variable("u")
-  val c1 = Constant("c1")
-  val c2 = Constant("c2")
   val V = Constant("V")
 
-  // Define some atoms
-  val headAtom = Atom("headRelation", Seq(x, y))
-  val bodyAtom1 = Atom("bodyRelation1", Seq(x, c1))
-  val bodyAtom2 = Atom("bodyRelation2", Seq(y, c2))
+  // Define conjunctive query's
 
-  // Define a conjunctive query
-
-  val answer1 = Atom("answer", Seq())
-  val bodyA = Atom("A", Seq(x, y))
-  val bodyB = Atom("B", Seq(y, z))
-  val bodyC= Atom("C", Seq(z, w, u, V))
+  val answer1 = Atom("answer", Set())
+  val bodyA = Atom("A", Set(x, y))
+  val bodyB = Atom("B", Set(y, z))
+  val bodyC = Atom("C", Set(z, w, u, V))
+  val bodyD = Atom("D", Set(w, y))
 
   val query1 = ConjunctiveQuery(
     queryId = 1,
@@ -123,14 +130,21 @@ object GYO {
     bodyAtoms = List(bodyA, bodyB, bodyC)
   )
 
+    val query2 = ConjunctiveQuery(
+    queryId = 2,
+    headAtom = answer1,
+    bodyAtoms = List(bodyA, bodyB, bodyC, bodyD)
+  )
+
   // Print the query
   //ConjunctiveQueryUtils.printQuery(query)
 
   // Create a homomorphism
-  val homomorphism = new Homomorphism()
-    .addMapping(x, c1)
-    .addMapping(y, c2)
+ // val homomorphism = new Homomorphism()
+///    .addMapping(x, c1)
+//    .addMapping(y, c2)
 
   GYO.isAcyclic(query1)
+  //GYO.isAcyclic(query2)
 
 }
