@@ -1,1 +1,136 @@
-ConjunctiveQuery(2,Atom(answer,List()),Set(Atom(A,List(Variable(x), Variable(y))), Atom(B,List(Variable(y), Variable(z))), Atom(C,List(Variable(z), Variable(w), Variable(u), Constant(V)))))
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x), Variable(y))), Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove earAtom(A,Set(Variable(x), Variable(y)))with witnessAtom(B,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove earAtom(B,Set(Variable(y), Variable(z)))with witnessAtom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))
+Current query is: List(Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove earAtom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x), Variable(y))), Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))), Atom(D,Set(Variable(w), Variable(y))))
+Remove earAtom(A,Set(Variable(x), Variable(y)))with witnessAtom(B,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))), Atom(D,Set(Variable(w), Variable(y))))
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x))), Atom(D,Set(Variable(x))))
+Remove earAtom(A,Set(Variable(x)))with witnessAtom(D,Set(Variable(x)))
+Current query is: List(Atom(D,Set(Variable(x))))
+Remove earAtom(D,Set(Variable(x)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x))))
+Remove earAtom(E,Set(Variable(x)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(w))), Atom(E,Set(Variable(w), Variable(u))))
+Remove earAtom(E,Set(Variable(w)))with witnessAtom(E,Set(Variable(w), Variable(u)))
+Current query is: List(Atom(E,Set(Variable(w), Variable(u))))
+Remove earAtom(E,Set(Variable(w), Variable(u)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x))), Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(x)))with witnessAtom(E,Set(Variable(x), Variable(y)))
+Current query is: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z))), Atom(E,Set(Variable(z), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(z)))
+Current query is: List(Atom(E,Set(Variable(z))), Atom(E,Set(Variable(z), Variable(w))))
+Remove earAtom(E,Set(Variable(z)))with witnessAtom(E,Set(Variable(z), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(z), Variable(w))))
+Remove earAtom(E,Set(Variable(z), Variable(w)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(z), Variable(y)))
+Current query is: List(Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(z), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(w)))
+Current query is: empty
+--------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(z), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(y), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(w)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x), Variable(y))), Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove ear: Atom(A,Set(Variable(x), Variable(y)))with witnessAtom(B,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove ear: Atom(B,Set(Variable(y), Variable(z)))with witnessAtom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))
+Current query is: List(Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
+Remove earAtom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x), Variable(y))), Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))), Atom(D,Set(Variable(w), Variable(y))))
+Remove ear: Atom(A,Set(Variable(x), Variable(y)))with witnessAtom(B,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(B,Set(Variable(y), Variable(z))), Atom(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))), Atom(D,Set(Variable(w), Variable(y))))
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(A,Set(Variable(x))), Atom(D,Set(Variable(x))))
+Remove ear: Atom(A,Set(Variable(x)))with witnessAtom(D,Set(Variable(x)))
+Current query is: List(Atom(D,Set(Variable(x))))
+Remove earAtom(D,Set(Variable(x)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x))))
+Remove earAtom(E,Set(Variable(x)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove ear: Atom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(w))), Atom(E,Set(Variable(w), Variable(u))))
+Remove ear: Atom(E,Set(Variable(w)))with witnessAtom(E,Set(Variable(w), Variable(u)))
+Current query is: List(Atom(E,Set(Variable(w), Variable(u))))
+Remove earAtom(E,Set(Variable(w), Variable(u)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x))), Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove ear: Atom(E,Set(Variable(x)))with witnessAtom(E,Set(Variable(x), Variable(y)))
+Current query is: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))))
+Remove ear: Atom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))))
+Remove earAtom(E,Set(Variable(y), Variable(z)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z))), Atom(E,Set(Variable(z), Variable(w))))
+Remove ear: Atom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(z)))
+Current query is: List(Atom(E,Set(Variable(z))), Atom(E,Set(Variable(z), Variable(w))))
+Remove ear: Atom(E,Set(Variable(z)))with witnessAtom(E,Set(Variable(z), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(z), Variable(w))))
+Remove earAtom(E,Set(Variable(z), Variable(w)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(x), Variable(y))), Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove ear: Atom(E,Set(Variable(x), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove ear: Atom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(z), Variable(y)))
+Current query is: List(Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(w))))
+Remove ear: Atom(E,Set(Variable(z), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(w)))
+Current query is: empty
+------------------------------------------------------------------------------------------------------------
+GYO for query: List(Atom(E,Set(Variable(z), Variable(y))), Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(y), Variable(w))))
+Remove ear: Atom(E,Set(Variable(z), Variable(y)))with witnessAtom(E,Set(Variable(y), Variable(z)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(z))), Atom(E,Set(Variable(y), Variable(w))))
+Remove ear: Atom(E,Set(Variable(y), Variable(z)))with witnessAtom(E,Set(Variable(y), Variable(w)))
+Current query is: List(Atom(E,Set(Variable(y), Variable(w))))
+Remove earAtom(E,Set(Variable(y), Variable(w)))
+Current query is: empty

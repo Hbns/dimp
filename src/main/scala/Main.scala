@@ -1,3 +1,6 @@
+// all queries are in Queries.scala
+import Queries._
+
 // Trait for terms, which can be either constants or variables
 sealed trait Term
 case class Constant(value: String) extends Term
@@ -65,8 +68,9 @@ object GYO {
       case Nil => body
       case head :: Nil => 
         // single atomic formula, has no cycle, return empty list
+        log("Remove ear" + head)
+        log("Current query is: empty")
         List.empty[Atom]
-      
       case head :: restOfAtoms =>
         val headTerms = head.terms
         val uniqueTerms = restOfAtoms.foldLeft(headTerms) {(acc, atom) =>
@@ -75,82 +79,42 @@ object GYO {
           } 
         val nonUniqueTerms = headTerms.diff(uniqueTerms)        
         val witness = restOfAtoms.find(atom => atom.terms.intersect(nonUniqueTerms) == nonUniqueTerms)
-        
-        println("ut: " + uniqueTerms)
-        println("nut: " + nonUniqueTerms)
-        println("witness: " + witness)
-        println("--------------------------")
-      
+    
         witness match {
           case Some(_) =>
+            log("Remove ear: " + head + "with witness" + witness.get)
+            log("Current query is: " + restOfAtoms)
             reduceQuery(restOfAtoms, 0)
           case None => 
             if (counter >= maxRecursions) {
               body
             } else {
               reduceQuery(restOfAtoms :+ head, counter + 1)
-
-            }
-            
+            }  
         }
-    }  
-    
+    }     
   } 
   
   def isAcyclic(query: ConjunctiveQuery): Boolean = {
-    val ba = query.bodyAtoms
-    val reducedQuery = reduceQuery(ba) 
+    val bodyAtoms = query.bodyAtoms
+    log("------------------------------------------------------------------------------------------------------------")
+    log("GYO for query: " + bodyAtoms)
+    val reducedQuery = reduceQuery(body = bodyAtoms ) 
     reducedQuery.isEmpty
     
   }
 
   def log(line: String): Unit = {
-    
     val txtOutputPath= os.pwd / "output"
-
-    //make folder 
-    //if (!os.exists(txtOutputPath)){
-   //   os.makeDir.all(txtOutputPath)
-   // }
-
     val path: os.Path = txtOutputPath / "output.txt"
-
-    os.write(path, line)
+    os.write.append(path, line + "\n")
   }
 }
 
 
 // Example usage
 @main def main(): Unit = {
-  // Define some constants and variables
-  val x = Variable("x")
-  val y = Variable("y")
-  val z = Variable("z")
-  val w = Variable("w")
-  val u = Variable("u")
-  val V = Constant("V")
-
-  // Define conjunctive query's
-
-  val answer1 = Atom("answer", Set())
-  val bodyA = Atom("A", Set(x, y))
-  val bodyB = Atom("B", Set(y, z))
-  val bodyC = Atom("C", Set(z, w, u, V))
-  val bodyD = Atom("D", Set(w, y))
-
-  val query1 = ConjunctiveQuery(
-    queryId = 1,
-    headAtom = answer1,
-    bodyAtoms = List(bodyA, bodyB, bodyC)
-  )
-
-    val query2 = ConjunctiveQuery(
-    queryId = 2,
-    headAtom = answer1,
-    bodyAtoms = List(bodyA, bodyB, bodyC, bodyD)
-  )
-
-  // Print the query
+    // Print the query
   //ConjunctiveQueryUtils.printQuery(query)
 
   // Create a homomorphism
@@ -158,8 +122,9 @@ object GYO {
 ///    .addMapping(x, c1)
 //    .addMapping(y, c2)
 
-  println(GYO.isAcyclic(query1))
-  println(GYO.isAcyclic(query2))
-  //GYO.isAcyclic(query2)
+  val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
+  for (query <- queries) {
+      println("qid: " + query.queryId + "," + GYO.isAcyclic(query))
+  }
 
 }
