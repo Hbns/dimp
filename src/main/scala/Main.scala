@@ -7,7 +7,9 @@ case class Constant(value: String) extends Term
 case class Variable(name: String) extends Term
 
 // Case class for atoms, which consist of a relation name and a tuple of terms
-case class Atom(relationName: String, terms: Set[Term])
+case class Atom(relationName: String, terms: List[Term])
+// Using Set for GYO but List for containment..
+case class AtomSet(relationName: String, terms: Set[Term])
 
 // Case class for the conjunctive query
 case class ConjunctiveQuery(
@@ -70,14 +72,14 @@ case class Hypergraph(edges: Set[Set[Term]]) {
 
 object GYO {
   // maxRecursions to stop recursion in case of repeated false for witness..
-  def reduceQuery(body: List[Atom], counter: Int = 0 , maxRecursions: Int = 4): List[Atom] = {
+  def reduceQuery(body: List[AtomSet], counter: Int = 0 , maxRecursions: Int = 4): List[AtomSet] = {
     body match {
       case Nil => body
       case head :: Nil => 
         // single atomic formula, has no cycle, return empty list
         log("Remove ear" + head)
         log("Current query is: empty")
-        List.empty[Atom]
+        List.empty[AtomSet]
       case head :: restOfAtoms =>
         val headTerms = head.terms
         val uniqueTerms = restOfAtoms.foldLeft(headTerms) {(acc, atom) =>
@@ -104,9 +106,13 @@ object GYO {
   
   def isAcyclic(query: ConjunctiveQuery): Boolean = {
     val bodyAtoms = query.bodyAtoms
+    // convert terms form List[Terms] to Set[Terms]
+    val bodyAtomsAsSet = bodyAtoms.map { atom =>
+      AtomSet(atom.relationName, atom.terms.toSet)
+    }
     log("------------------------------------------------------------------------------------------------------------")
     log("GYO for query: " + bodyAtoms)
-    val reducedQuery = reduceQuery(body = bodyAtoms ) 
+    val reducedQuery = reduceQuery(body = bodyAtomsAsSet) 
     reducedQuery.isEmpty
     
   }
@@ -132,7 +138,7 @@ object Containment {
     val cq2Body = cq2.bodyAtoms.sortBy(_.relationName)
     println("scq1: " + cq1Head)
     println("scq2: " + cq2Head)
-
+    
     var homomorphism = new Homomorphism()
   
     cq1Head.zip(cq2Head).foreach { case (from, to) =>
@@ -144,14 +150,14 @@ object Containment {
         homomorphism = homomorphism.addMapping(from, to)
       }
     }
+ //   val h = cq1Body.zip(cq2Body)
+ //   println("h: " + h)
   }
-    
+    println(checkHeadSize(cq1,cq2))
     println("All mappings: " + homomorphism.getAllMappings)
   }
   
 }
-
-
 // Example usage
 @main def main(): Unit = {
     // Print the query
@@ -163,11 +169,11 @@ object Containment {
 //    .addMapping(y, c2)
 
 // al queries..
-//  val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
-//  for (query <- queries) {
-//      println("qid: " + query.queryId + "," + GYO.isAcyclic(query))
-//  }
+// val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
+// for (query <- queries) {
+//     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
+// }
 
-Containment.makeMapping(query8,query9)
+  Containment.makeMapping(query9,query10)
 
 }
