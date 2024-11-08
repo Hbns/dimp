@@ -28,9 +28,16 @@ object ConjunctiveQueryUtils {
 
 class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
 
-  // Method to add a mapping
   def addMapping(from: Term, to: Term): Homomorphism = {
-    new Homomorphism(mapping + (from -> to))
+     if (!mapping.contains(from)) {
+      new Homomorphism(mapping + (from -> to))
+    } else {
+      this 
+    }
+  }
+  
+  def containsMapping(term: Term): Boolean = {
+    mapping.contains(term)
   }
 
   // Method to retrieve a mapping
@@ -111,6 +118,39 @@ object GYO {
   }
 }
 
+object Containment {
+  // Conjunctive queries can only be contained if similar number of terms in the head.
+  def checkHeadSize(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
+   cq1.headAtom.terms.size == cq2.headAtom.terms.size
+  }
+  
+  def makeMapping(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Unit = {
+    val cq1Head = cq1.headAtom.terms
+    val cq2Head = cq2.headAtom.terms
+    // sort relation names, 
+    val cq1Body = cq1.bodyAtoms.sortBy(_.relationName)
+    val cq2Body = cq2.bodyAtoms.sortBy(_.relationName)
+    println("scq1: " + cq1Head)
+    println("scq2: " + cq2Head)
+
+    var homomorphism = new Homomorphism()
+  
+    cq1Head.zip(cq2Head).foreach { case (from, to) =>
+      homomorphism = homomorphism.addMapping(from, to)}
+
+    cq1Body.zip(cq2Body).foreach { case (atomCq1, atomCq2) =>
+    if (atomCq1.relationName == atomCq2.relationName) {
+      atomCq1.terms.zip(atomCq2.terms).foreach { case (from, to) =>
+        homomorphism = homomorphism.addMapping(from, to)
+      }
+    }
+  }
+    
+    println("All mappings: " + homomorphism.getAllMappings)
+  }
+  
+}
+
 
 // Example usage
 @main def main(): Unit = {
@@ -122,9 +162,12 @@ object GYO {
 ///    .addMapping(x, c1)
 //    .addMapping(y, c2)
 
-  val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
-  for (query <- queries) {
-      println("qid: " + query.queryId + "," + GYO.isAcyclic(query))
-  }
+// al queries..
+//  val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
+//  for (query <- queries) {
+//      println("qid: " + query.queryId + "," + GYO.isAcyclic(query))
+//  }
+
+Containment.makeMapping(query8,query9)
 
 }
