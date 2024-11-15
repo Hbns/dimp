@@ -1,0 +1,18 @@
+q1 is: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(z))), Atom(E,List(Variable(z), Variable(w)))))
+q2 is: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(z))), Atom(E,List(Variable(z), Variable(w)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(y), Variable(y) -> Variable(z), Variable(z) -> Variable(z), Variable(w) -> Variable(z))
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(w) -> Variable(x), Variable(u) -> Variable(y))
+q1 is: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(z))), Atom(E,List(Variable(z), Variable(w)))))
+q2 is: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(z))), Atom(E,List(Variable(z), Variable(w)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(y), Variable(y) -> Variable(z), Variable(z) -> Variable(z), Variable(w) -> Variable(z))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(w) -> Variable(x), Variable(u) -> Variable(y))
+------------------------------------------------------------------------------------------------------------

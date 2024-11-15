@@ -29,7 +29,6 @@ object ConjunctiveQueryUtils {
 }
 
 class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
-
   def addMapping(from: Term, to: Term): Homomorphism = {
      if (!mapping.contains(from)) {
       new Homomorphism(mapping + (from -> to))
@@ -119,55 +118,68 @@ object GYO {
 
   def log(line: String): Unit = {
     val txtOutputPath= os.pwd / "output"
-    val path: os.Path = txtOutputPath / "output.txt"
+    val path: os.Path = txtOutputPath / "output-GYO.txt"
     os.write.append(path, line + "\n")
   }
 }
 
 // algorithm does not check for relation arity, 
-// in the given cq's all similar named relations have similar arity.
-
+// in the given cq's all similar named relations have same arity.
 object Containment {
   // Conjunctive queries can only be contained if similar number of terms in the head.
   def checkHeadSize(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
    cq1.headAtom.terms.size == cq2.headAtom.terms.size
   }
-  // Build posible Homomorphism
-  def makeMapping(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Homomorphism = {
-    // cq1 contained in cq2 -> find mapping from cq2 to
-    val mapFromBody = cq2.bodyAtoms
-    val mapToBody = cq1.bodyAtoms
+  // Try to build Homomorphism proposition
+  def makeMapping(fromBody: List[Atom], toBody: List[Atom]): Homomorphism = {
     var homomorphism = new Homomorphism()
     // make a mapping
-    mapFromBody.foreach { atomFrom =>
+    fromBody.foreach { atomFrom =>
         // Find all matching atoms in toBody based on relationName
-        mapToBody.filter(_.relationName == atomFrom.relationName).foreach { atomTo =>
+        toBody.filter(_.relationName == atomFrom.relationName).foreach { atomTo =>
           // Zip the terms and add mappings
           atomFrom.terms.zip(atomTo.terms).foreach { case (from, to) =>
             homomorphism = homomorphism.addMapping(from, to)
           }
         }
   }
-      // return the homomorphism
+      // return
       homomorphism
   }
+  // verify for each relation if it exists in cq1 after replacing terms from mapping.
   def isValidMapping(mapping: Homomorphism, fromBody: List[Atom], toBody: List[Atom]): Boolean = {
-    fromBody.forall{ atomFrom => 
+    fromBody.forall{ atomFrom =>
+      // replace terms by the ones found in mapping.
       val mappedAtom = Atom(
         relationName = atomFrom.relationName,
         terms = atomFrom.terms.map(term => mapping.getMapping(term).getOrElse(term)))
-
+      // does the atom with terms replaced from mapping exist in toBody?
       toBody.contains(mappedAtom)
      }
   }
 
-  def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Unit = {
-    val homomorphism = makeMapping(cq1, cq2)
-  //println(checkHeadSize(cq1,cq2))
-    println("All mappings: " + homomorphism.getAllMappings)
-    println(isValidMapping(homomorphism, cq2.bodyAtoms, cq1.bodyAtoms))
+  def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
+    // cq1 contained in cq2 -> find mapping from cq2 to
+    val fromBody = cq2.bodyAtoms
+    val toBody = cq1.bodyAtoms
+    log("q1 is: " + cq1)
+    log("q2 is: " + cq1)
+    // only start verification if headsize of cq1 and cq2 is equal.
+    if (checkHeadSize(cq1, cq2)){
+      val homomorphism = makeMapping(fromBody, toBody)
+      log("A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
+      log("------------------------------------------------------------------------------------------------------------")
+      isValidMapping(homomorphism, fromBody, toBody)
+    } else {
+      false
+    }
   }
-}
+  def log(line: String): Unit = {
+    val txtOutputPath= os.pwd / "output"
+    val path: os.Path = txtOutputPath / "output-containment.txt"
+    os.write.append(path, line + "\n")
+  }
+}  
 
 // Example usage
 @main def main(): Unit = {
@@ -185,9 +197,10 @@ object Containment {
 //     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
 // }
 
-  Containment.isContainedIn(query8,query9)
+  println(Containment.isContainedIn(query8,query9))
+  println(Containment.isContainedIn(query5,query6))
 
-  Containment.isContainedIn(query5,query6)
+  
   
 
 }
