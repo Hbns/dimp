@@ -43,7 +43,7 @@ class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
   }
 
   // Method to retrieve a mapping
-  def apply(term: Term): Option[Term] = {
+  def getMapping(term: Term): Option[Term] = {
     mapping.get(term)
   }
 
@@ -124,40 +124,51 @@ object GYO {
   }
 }
 
+// algorithm does not check for relation arity, 
+// in the given cq's all similar named relations have similar arity.
+
 object Containment {
   // Conjunctive queries can only be contained if similar number of terms in the head.
   def checkHeadSize(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
    cq1.headAtom.terms.size == cq2.headAtom.terms.size
   }
-  
-  def makeMapping(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Unit = {
-    val cq1Head = cq1.headAtom.terms
-    val cq2Head = cq2.headAtom.terms
-    // sort relation names, 
-    val cq1Body = cq1.bodyAtoms.sortBy(_.relationName)
-    val cq2Body = cq2.bodyAtoms.sortBy(_.relationName)
-    println("scq1: " + cq1Head)
-    println("scq2: " + cq2Head)
-    
+  // Build posible Homomorphism
+  def makeMapping(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Homomorphism = {
+    // cq1 contained in cq2 -> find mapping from cq2 to
+    val mapFromBody = cq2.bodyAtoms
+    val mapToBody = cq1.bodyAtoms
     var homomorphism = new Homomorphism()
-  
-    cq1Head.zip(cq2Head).foreach { case (from, to) =>
-      homomorphism = homomorphism.addMapping(from, to)}
+    // make a mapping
+    mapFromBody.foreach { atomFrom =>
+        // Find all matching atoms in toBody based on relationName
+        mapToBody.filter(_.relationName == atomFrom.relationName).foreach { atomTo =>
+          // Zip the terms and add mappings
+          atomFrom.terms.zip(atomTo.terms).foreach { case (from, to) =>
+            homomorphism = homomorphism.addMapping(from, to)
+          }
+        }
+  }
+      // return the homomorphism
+      homomorphism
+  }
+  def isValidMapping(mapping: Homomorphism, fromBody: List[Atom], toBody: List[Atom]): Boolean = {
+    fromBody.forall{ atomFrom => 
+      val mappedAtom = Atom(
+        relationName = atomFrom.relationName,
+        terms = atomFrom.terms.map(term => mapping.getMapping(term).getOrElse(term)))
 
-    cq1Body.zip(cq2Body).foreach { case (atomCq1, atomCq2) =>
-    if (atomCq1.relationName == atomCq2.relationName) {
-      atomCq1.terms.zip(atomCq2.terms).foreach { case (from, to) =>
-        homomorphism = homomorphism.addMapping(from, to)
-      }
-    }
- //   val h = cq1Body.zip(cq2Body)
- //   println("h: " + h)
+      toBody.contains(mappedAtom)
+     }
   }
-    println(checkHeadSize(cq1,cq2))
+
+  def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Unit = {
+    val homomorphism = makeMapping(cq1, cq2)
+  //println(checkHeadSize(cq1,cq2))
     println("All mappings: " + homomorphism.getAllMappings)
+    println(isValidMapping(homomorphism, cq2.bodyAtoms, cq1.bodyAtoms))
   }
-  
 }
+
 // Example usage
 @main def main(): Unit = {
     // Print the query
@@ -174,6 +185,9 @@ object Containment {
 //     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
 // }
 
-  Containment.makeMapping(query9,query10)
+  Containment.isContainedIn(query8,query9)
+
+  Containment.isContainedIn(query5,query6)
+  
 
 }
