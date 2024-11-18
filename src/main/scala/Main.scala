@@ -3,7 +3,7 @@ import Queries._
 
 // Trait for terms, which can be either constants or variables
 sealed trait Term
-case class Constant(value: String) extends Term
+case class Constant(name: String) extends Term
 case class Variable(name: String) extends Term
 
 // Case class for atoms, which consist of a relation name and a tuple of terms
@@ -157,23 +157,54 @@ object Containment {
       toBody.contains(mappedAtom)
      }
   }
+  // Function to log the grounded CQ counterexample database D.
+  def groundQuery(cq: ConjunctiveQuery): Unit = {
+    // Helper function to ground terms ("apply Gs mapping")
+    def groundTerms(terms: List[Term]): String =
+      terms.map {
+        case Variable(name) => s"'${name.toUpperCase}'"
+        case Constant(name) => s"'${name.toUpperCase}'"
+      }.mkString(",")
+
+    val cqHeadGrounded = groundTerms(cq.headAtom.terms)
+    
+    cq.bodyAtoms.foreach { atom =>
+      val grounded = groundTerms(atom.terms)
+      log(s"${atom.relationName}($grounded)")
+    }
+
+    log(s"Then q1(D) contains the tuple ($cqHeadGrounded)")
+    log(s"However, ($cqHeadGrounded) is not in q2(D) since q2(D) is empty.")
+  }
+
 
   def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
     // cq1 contained in cq2 -> find mapping from cq2 to
     val fromBody = cq2.bodyAtoms
     val toBody = cq1.bodyAtoms
-    log("q1 is: " + cq1)
-    log("q2 is: " + cq1)
+    log(s"q1 is: $cq1")
+    log(s"q2 is: $cq2")
     // only start verification if headsize of cq1 and cq2 is equal.
     if (checkHeadSize(cq1, cq2)){
       val homomorphism = makeMapping(fromBody, toBody)
-      log("A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
-      log("------------------------------------------------------------------------------------------------------------")
-      isValidMapping(homomorphism, fromBody, toBody)
+      // if test to organize logging into output-containment.txt
+      if (isValidMapping(homomorphism, fromBody, toBody)){
+        log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
+        log("------------------------------------------------------------------------------------------------------------")
+        true
+      } else {
+        // we know the mapping is not valid -> the canonical database is the grounding of cq1 into facts.
+        log("A possible counterexample database D contains the following atoms: ")
+        groundQuery(cq1)
+        log("------------------------------------------------------------------------------------------------------------")
+        false
+      }
     } else {
+      // headsizes do not match.
       false
     }
   }
+
   def log(line: String): Unit = {
     val txtOutputPath= os.pwd / "output"
     val path: os.Path = txtOutputPath / "output-containment.txt"
