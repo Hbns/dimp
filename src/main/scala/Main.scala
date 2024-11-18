@@ -124,7 +124,7 @@ object GYO {
 }
 
 // algorithm does not check for relation arity, 
-// in the given cq's all similar named relations have same arity.
+// in the given cq's to check all similar named relations have same arity.
 object Containment {
   // Conjunctive queries can only be contained if similar number of terms in the head.
   def checkHeadSize(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
@@ -177,7 +177,6 @@ object Containment {
     log(s"However, ($cqHeadGrounded) is not in q2(D) since q2(D) is empty.")
   }
 
-
   def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
     // cq1 contained in cq2 -> find mapping from cq2 to
     val fromBody = cq2.bodyAtoms
@@ -210,7 +209,46 @@ object Containment {
     val path: os.Path = txtOutputPath / "output-containment.txt"
     os.write.append(path, line + "\n")
   }
-}  
+}
+object Minimality{
+  
+  def isSelfJoinFree(cqBody: List[Atom]): Boolean = {
+    val relationNames = cqBody.map(_.relationName)
+    // if all relationNames are unique there count equals the number of relations.
+    relationNames.distinct.size == relationNames.size
+  }
+
+  def proposeAtom(cq: ConjunctiveQuery): Option[AtomSet] = {
+    val cqBody = cq.bodyAtoms
+    val cqHead = cq.headAtom
+    // convert terms form List[Terms] to Set[Terms]
+    val cqHeadTerms = AtomSet(cqHead.relationName, cqHead.terms.toSet).terms
+    val cqBodyTerms = cqBody.map { atom =>
+      AtomSet(atom.relationName, atom.terms.toSet)
+    }
+    // if selfJoinFree no term to be found. 
+    if (isSelfJoinFree(cqBody)) {
+      None
+    } else{
+      cqBodyTerms.find { term => 
+        val remainingBody = cqBodyTerms.filterNot(_ == term)
+        val RemainingBody = remainingBody.flatMap(_.terms).toSet
+        cqHeadTerms subsetOf(RemainingBody)
+       }
+    }
+  } 
+  
+  def isMinimal(cq: ConjunctiveQuery) = {
+    
+    val ato = proposeAtom(cq) 
+    ato match {
+      case Some(value) =>
+        println(s"atom: ${value.relationName}, terms: ${value.terms}") 
+      case None => 
+        println("nothing returned")
+    }
+  }
+}
 
 // Example usage
 @main def main(): Unit = {
@@ -228,8 +266,11 @@ object Containment {
 //     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
 // }
 
-  println(Containment.isContainedIn(query8,query9))
-  println(Containment.isContainedIn(query5,query6))
+  //println(Containment.isContainedIn(query8,query9))
+  //println(Containment.isContainedIn(query5,query6))
+
+  Minimality.isMinimal(query8)
+  Minimality.isMinimal(query7)
 
   
   
