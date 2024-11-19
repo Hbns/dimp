@@ -1,5 +1,6 @@
 // all queries are in Queries.scala
 import Queries._
+import Containment.isContainedIn
 
 // Trait for terms, which can be either constants or variables
 sealed trait Term
@@ -68,6 +69,28 @@ case class Hypergraph(edges: Set[Set[Term]]) {
 //    Hypergraph(edges)
 //  }/
 //}
+
+object AtomConversions {
+  // Convert Atom to AtomSet
+  def atomToAtomSet(atom: Atom): AtomSet = {
+    AtomSet(atom.relationName, atom.terms.toSet)
+  }
+
+  // Convert List[Atom] to List[AtomSet]
+  def atomsToAtomsSet(atoms: List[Atom]): List[AtomSet] = {
+    atoms.map(atomToAtomSet)
+  }
+
+  // Convert AtomSet to Atom
+  def atomToAtomList(atomSet: AtomSet): Atom = {
+    Atom(atomSet.relationName, atomSet.terms.toList)
+  }
+
+  // Convert List[AtomSet] to List[Atom]
+  def atomsToAtomsList(atomSets: List[AtomSet]): List[Atom] = {
+    atomSets.map(atomToAtomList)
+  }
+}
 
 object GYO {
   // maxRecursions to stop recursion in case of repeated false for witness..
@@ -217,36 +240,41 @@ object Minimality{
     // if all relationNames are unique there count equals the number of relations.
     relationNames.distinct.size == relationNames.size
   }
+ 
+// select an Atom, make sure the terms of head are still a subset of the remainingBody.
+  def findAtom(body: List[Atom], head: Atom): Option[Atom] = {
+    body.find { atom =>
+      val remainingBody = body.filterNot(_ == atom)
+      val remainingBodyTerms = remainingBody.flatMap(_.terms)
+      head.terms.forall(term => remainingBodyTerms.contains(term))
+    }
+  }
 
-  def proposeAtom(cq: ConjunctiveQuery): Option[AtomSet] = {
-    val cqBody = cq.bodyAtoms
-    val cqHead = cq.headAtom
-    // convert terms form List[Terms] to Set[Terms]
-    val cqHeadTerms = AtomSet(cqHead.relationName, cqHead.terms.toSet).terms
-    val cqBodyTerms = cqBody.map { atom =>
-      AtomSet(atom.relationName, atom.terms.toSet)
+  // minimize the Body for as long we findAtom.
+  @scala.annotation.tailrec
+  def minimizeBody(body: List[Atom], head: Atom): List[Atom] = {
+    findAtom(body, head) match {
+      case Some(atom) =>
+        val minimizedBody = body.filterNot(_ == atom)
+        // need cq Atom, not AtomSet :-(
+        val cq1 = ConjunctiveQuery(1, head, body)
+        val cq2 = ConjunctiveQuery(2, head, minimizedBody)
+        if ((isContainedIn(cq1, cq2)) && minimizedBody.length > 1)
+        minimizeBody(minimizedBody, head) 
+        else 
+          minimizedBody
+        
+      case None => 
+        body
     }
-    // if selfJoinFree no term to be found. 
-    if (isSelfJoinFree(cqBody)) {
-      None
-    } else{
-      cqBodyTerms.find { term => 
-        val remainingBody = cqBodyTerms.filterNot(_ == term)
-        val RemainingBody = remainingBody.flatMap(_.terms).toSet
-        cqHeadTerms subsetOf(RemainingBody)
-       }
-    }
-  } 
+  }
   
   def isMinimal(cq: ConjunctiveQuery) = {
-    
-    val ato = proposeAtom(cq) 
-    ato match {
-      case Some(value) =>
-        println(s"atom: ${value.relationName}, terms: ${value.terms}") 
-      case None => 
-        println("nothing returned")
-    }
+    val cqBody = cq.bodyAtoms
+    val cqHead = cq.headAtom
+    val cqCore = ConjunctiveQuery(cq.queryId, cqHead, minimizeBody(cqBody, cqHead))
+    // if cqCore equals cq no minimization took place => cq is minimal.
+    cqCore == cq    
   }
 }
 
@@ -269,8 +297,9 @@ object Minimality{
   //println(Containment.isContainedIn(query8,query9))
   //println(Containment.isContainedIn(query5,query6))
 
-  Minimality.isMinimal(query8)
-  Minimality.isMinimal(query7)
+  println(Minimality.isMinimal(query4))
+  //Minimality.isMinimal(query8)
+   println(Minimality.isMinimal(query7))
 
   
   

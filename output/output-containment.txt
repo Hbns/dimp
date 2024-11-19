@@ -1,0 +1,115 @@
+q1 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(x))), Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(x), Variable(z) -> Variable(x))
+------------------------------------------------------------------------------------------------------------
+q1 is: ConjunctiveQuery(1,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))))
+q2 is: ConjunctiveQuery(2,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y)))))
+A possible homomorphism h from q2 to q1 contains the following mappings: 
+Map(Variable(x) -> Variable(x), Variable(y) -> Variable(y))
+------------------------------------------------------------------------------------------------------------
