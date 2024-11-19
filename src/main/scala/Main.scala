@@ -9,26 +9,17 @@ case class Variable(name: String) extends Term
 
 // Case class for atoms, which consist of a relation name and a tuple of terms
 case class Atom(relationName: String, terms: List[Term])
-// Using Set for GYO but List for containment..
+// Using Set[Term] for GYO but List for containment..
 case class AtomSet(relationName: String, terms: Set[Term])
 
-// Case class for the conjunctive query
+// F1. Query Data Structure
 case class ConjunctiveQuery(
   queryId: Int,
   headAtom: Atom,
   bodyAtoms: List[Atom]
 )
 
-// Define some utility methods
-object ConjunctiveQueryUtils {
-  def printQuery(query: ConjunctiveQuery): Unit = {
-    println(s"Query ID: ${query.queryId}")
-    println(s"Head Atom: ${query.headAtom}")
-    println("Body Atoms:")
-    query.bodyAtoms.foreach(println)
-  }
-}
-
+// F2. Homomorphism Data Structure
 class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
   def addMapping(from: Term, to: Term): Homomorphism = {
      if (!mapping.contains(from)) {
@@ -42,12 +33,10 @@ class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
     mapping.contains(term)
   }
 
-  // Method to retrieve a mapping
   def getMapping(term: Term): Option[Term] = {
     mapping.get(term)
   }
 
-  // Method to get all mappings
   def getAllMappings: Map[Term, Term] = {
     mapping
   }
@@ -58,40 +47,7 @@ class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
   }
 }
 
-// Define a case class for the hypergraph
-case class Hypergraph(edges: Set[Set[Term]]) {
-  def isEmpty: Boolean = edges.isEmpty
-}
-
-//object Hypergraph {
-///  def fromQuery(query: ConjunctiveQuery): Hypergraph = {
-//    val edges = query.bodyAtoms.map(atom => atom.terms.toSet)
-//    Hypergraph(edges)
-//  }/
-//}
-
-object AtomConversions {
-  // Convert Atom to AtomSet
-  def atomToAtomSet(atom: Atom): AtomSet = {
-    AtomSet(atom.relationName, atom.terms.toSet)
-  }
-
-  // Convert List[Atom] to List[AtomSet]
-  def atomsToAtomsSet(atoms: List[Atom]): List[AtomSet] = {
-    atoms.map(atomToAtomSet)
-  }
-
-  // Convert AtomSet to Atom
-  def atomToAtomList(atomSet: AtomSet): Atom = {
-    Atom(atomSet.relationName, atomSet.terms.toList)
-  }
-
-  // Convert List[AtomSet] to List[Atom]
-  def atomsToAtomsList(atomSets: List[AtomSet]): List[Atom] = {
-    atomSets.map(atomToAtomList)
-  }
-}
-
+// F3. Acyclicity Test
 object GYO {
   // maxRecursions to stop recursion in case of repeated false for witness..
   def reduceQuery(body: List[AtomSet], counter: Int = 0 , maxRecursions: Int = 4): List[AtomSet] = {
@@ -148,6 +104,7 @@ object GYO {
 
 // algorithm does not check for relation arity, 
 // in the given cq's to check all similar named relations have same arity.
+// F4. Containment Test
 object Containment {
   // Conjunctive queries can only be contained if similar number of terms in the head.
   def checkHeadSize(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
@@ -233,6 +190,8 @@ object Containment {
     os.write.append(path, line + "\n")
   }
 }
+
+// F5. Minimality Test
 object Minimality{
   
   def isSelfJoinFree(cqBody: List[Atom]): Boolean = {
@@ -280,19 +239,12 @@ object Minimality{
 
 // Example usage
 @main def main(): Unit = {
-    // Print the query
-  //ConjunctiveQueryUtils.printQuery(query)
-
-  // Create a homomorphism
- // val homomorphism = new Homomorphism()
-///    .addMapping(x, c1)
-//    .addMapping(y, c2)
-
-// al queries..
-// val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
-// for (query <- queries) {
-//     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
-// }
+ 
+// all queries..
+ val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
+ for (query <- queries) {
+     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
+ }
 
   //println(Containment.isContainedIn(query8,query9))
   //println(Containment.isContainedIn(query5,query6))
