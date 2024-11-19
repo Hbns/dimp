@@ -1,6 +1,7 @@
 // all queries are in Queries.scala
 import Queries._
 import Containment.isContainedIn
+import os.Path
 
 // Trait for terms, which can be either constants or variables
 sealed trait Term
@@ -47,10 +48,40 @@ class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
   }
 }
 
+// logger to write output.txt files
+trait Logger {
+  def log(line: String): Unit
+}
+
+object TestLogger extends Logger {
+  private var filePath: Option[Path] = None
+
+  def setFileName(name: String): Unit = {
+    val outputDir = os.pwd / "output"
+    filePath = Some(outputDir / name)
+  }
+
+  def log(line: String): Unit ={
+    filePath match {
+      case Some(path) => os.write.append(path, line + "\n")
+      case None => throw new IllegalStateException("File path is not set. Call setFileName first.") 
+    }
+  }
+
+  def deleteFile(): Unit = {
+    filePath.foreach(path => if (os.exists(path)) os.remove(path))
+  }
+}
+
+
 // F3. Acyclicity Test
 object GYO {
-  // maxRecursions to stop recursion in case of repeated false for witness..
-  def reduceQuery(body: List[AtomSet], counter: Int = 0 , maxRecursions: Int = 4): List[AtomSet] = {
+  @scala.annotation.tailrec
+  def reduceQuery(body: List[AtomSet], visited: Set[AtomSet]): List[AtomSet] = {
+    if (visited.contains(body.head)){
+      // visited before
+      body
+    } else {
     body match {
       case Nil => body
       case head :: Nil => 
@@ -71,15 +102,13 @@ object GYO {
           case Some(_) =>
             log("Remove ear: " + head + "with witness" + witness.get)
             log("Current query is: " + restOfAtoms)
-            reduceQuery(restOfAtoms, 0)
+            reduceQuery(restOfAtoms, visited)
           case None => 
-            if (counter >= maxRecursions) {
-              body
-            } else {
-              reduceQuery(restOfAtoms :+ head, counter + 1)
+            reduceQuery(restOfAtoms :+ head, visited +head)
             }  
         }
-    }     
+      } 
+        
   } 
   
   def isAcyclic(query: ConjunctiveQuery): Boolean = {
@@ -90,7 +119,7 @@ object GYO {
     }
     log("------------------------------------------------------------------------------------------------------------")
     log("GYO for query: " + bodyAtoms)
-    val reducedQuery = reduceQuery(body = bodyAtomsAsSet) 
+    val reducedQuery = reduceQuery(body = bodyAtomsAsSet, Set.empty) 
     reducedQuery.isEmpty
     
   }
@@ -169,6 +198,7 @@ object Containment {
       // if test to organize logging into output-containment.txt
       if (isValidMapping(homomorphism, fromBody, toBody)){
         log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
+        TestLogger.log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
         log("------------------------------------------------------------------------------------------------------------")
         true
       } else {
@@ -214,14 +244,17 @@ object Minimality{
   def minimizeBody(body: List[Atom], head: Atom): List[Atom] = {
     findAtom(body, head) match {
       case Some(atom) =>
+        TestLogger.log(s"Remove atom: $atom")
         val minimizedBody = body.filterNot(_ == atom)
         // need cq Atom, not AtomSet :-(
         val cq1 = ConjunctiveQuery(1, head, body)
         val cq2 = ConjunctiveQuery(2, head, minimizedBody)
-        if ((isContainedIn(cq1, cq2)) && minimizedBody.length > 1)
+        if ((isContainedIn(cq1, cq2)) && minimizedBody.length > 1){
+        TestLogger.log(s"Current query is: $cq2.")
         minimizeBody(minimizedBody, head) 
-        else 
+        } else { 
           minimizedBody
+        }
         
       case None => 
         body
@@ -229,11 +262,23 @@ object Minimality{
   }
   
   def isMinimal(cq: ConjunctiveQuery) = {
+    val fileName = s"test-minimality-${cq.queryId}.txt"
+    TestLogger.setFileName(fileName)
+    TestLogger.log(s"Minimization for query: $cq.")
     val cqBody = cq.bodyAtoms
     val cqHead = cq.headAtom
     val cqCore = ConjunctiveQuery(cq.queryId, cqHead, minimizeBody(cqBody, cqHead))
+    TestLogger.log(s"Current query is: $cqCore")
+    TestLogger.log("No more atoms can be removed.")
     // if cqCore equals cq no minimization took place => cq is minimal.
-    cqCore == cq    
+    // cqCore == cq
+    if (cqCore == cq){
+      // delete report since: if running isMinimal on the query returns 1 no report is generated.
+      TestLogger.deleteFile()
+      true
+    } else {
+      false
+    }    
   }
 }
 
