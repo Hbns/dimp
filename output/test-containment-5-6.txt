@@ -1,0 +1,36 @@
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))))).
+q2 is: ConjunctiveQuery(6,Atom(answer,List(Variable(w))),List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u))))).
+A possible counterexample database D contains the following atoms: 
+Then q1(D) contains the tuple ('X')
+However, ('X') is not in q2(D) since q2(D) is empty.
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))))).
+q2 is: ConjunctiveQuery(6,Atom(answer,List(Variable(w))),List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u))))).
+A possible counterexample database D contains the following atoms: 
+E('X','Y')
+E('Y','Z')
+Then q1(D) contains the tuple ('X')
+However, ('X') is not in q2(D) since q2(D) is empty.
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))))).
+q2 is: ConjunctiveQuery(6,Atom(answer,List(Variable(w))),List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u))))).
+mapped: Atom(E,List(Variable(x), Variable(x)))
+A possible counterexample database D contains the following atoms: 
+E('X','Y')
+E('Y','Z')
+Then q1(D) contains the tuple ('X')
+However, ('X') is not in q2(D) since q2(D) is empty.
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))))).
+q2 is: ConjunctiveQuery(6,Atom(answer,List(Variable(w))),List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u))))).
+mapped: Atom(E,List(Variable(x), Variable(x)))
+A possible counterexample database D contains the following atoms: 
+E('X','Y')
+E('Y','Z')
+Then q1(D) contains the tuple ('X')
+However, ('X') is not in q2(D) since q2(D) is empty.
+q1 is: ConjunctiveQuery(5,Atom(answer,List(Variable(x))),List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))))).
+q2 is: ConjunctiveQuery(6,Atom(answer,List(Variable(w))),List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u))))).
+mapped: Atom(E,List(Variable(x), Variable(x)))
+A possible counterexample database D contains the following atoms: 
+E('X','Y')
+E('Y','Z')
+Then q1(D) contains the tuple ('X')
+However, ('X') is not in q2(D) since q2(D) is empty.

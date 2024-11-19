@@ -86,8 +86,8 @@ object GYO {
       case Nil => body
       case head :: Nil => 
         // single atomic formula, has no cycle, return empty list
-        log("Remove ear" + head)
-        log("Current query is: empty")
+        TestLogger.log("Remove ear: " + head)
+        TestLogger.log("Current query is: empty")
         List.empty[AtomSet]
       case head :: restOfAtoms =>
         val headTerms = head.terms
@@ -100,8 +100,8 @@ object GYO {
     
         witness match {
           case Some(_) =>
-            log("Remove ear: " + head + "with witness" + witness.get)
-            log("Current query is: " + restOfAtoms)
+            TestLogger.log("Remove ear: " + head + "with witness" + witness.get)
+            TestLogger.log("Current query is: " + restOfAtoms)
             reduceQuery(restOfAtoms, visited)
           case None => 
             reduceQuery(restOfAtoms :+ head, visited +head)
@@ -111,23 +111,20 @@ object GYO {
         
   } 
   
-  def isAcyclic(query: ConjunctiveQuery): Boolean = {
-    val bodyAtoms = query.bodyAtoms
+  def isAcyclic(cq: ConjunctiveQuery): Boolean = {
+    val bodyAtoms = cq.bodyAtoms
     // convert terms form List[Terms] to Set[Terms]
     val bodyAtomsAsSet = bodyAtoms.map { atom =>
       AtomSet(atom.relationName, atom.terms.toSet)
     }
-    log("------------------------------------------------------------------------------------------------------------")
-    log("GYO for query: " + bodyAtoms)
+    // TestLogger administration
+    val fileName = s"test-acyclicity-${cq.queryId}.txt"
+    TestLogger.setFileName(fileName)
+    TestLogger.log(s"GYO for query: $bodyAtoms.")
+    
     val reducedQuery = reduceQuery(body = bodyAtomsAsSet, Set.empty) 
     reducedQuery.isEmpty
     
-  }
-
-  def log(line: String): Unit = {
-    val txtOutputPath= os.pwd / "output"
-    val path: os.Path = txtOutputPath / "output-GYO.txt"
-    os.write.append(path, line + "\n")
   }
 }
 
@@ -163,10 +160,11 @@ object Containment {
         relationName = atomFrom.relationName,
         terms = atomFrom.terms.map(term => mapping.getMapping(term).getOrElse(term)))
       // does the atom with terms replaced from mapping exist in toBody?
+      TestLogger.log(s"mapped: $mappedAtom")
       toBody.contains(mappedAtom)
      }
   }
-  // Function to log the grounded CQ counterexample database D.
+  // Function to make the grounded CQ counterexample database D.
   def groundQuery(cq: ConjunctiveQuery): Unit = {
     // Helper function to ground terms ("apply Gs mapping")
     def groundTerms(terms: List[Term]): String =
@@ -179,33 +177,33 @@ object Containment {
     
     cq.bodyAtoms.foreach { atom =>
       val grounded = groundTerms(atom.terms)
-      log(s"${atom.relationName}($grounded)")
+      TestLogger.log(s"${atom.relationName}($grounded)")
     }
 
-    log(s"Then q1(D) contains the tuple ($cqHeadGrounded)")
-    log(s"However, ($cqHeadGrounded) is not in q2(D) since q2(D) is empty.")
+    TestLogger.log(s"Then q1(D) contains the tuple ($cqHeadGrounded)")
+    TestLogger.log(s"However, ($cqHeadGrounded) is not in q2(D) since q2(D) is empty.")
   }
 
   def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
     // cq1 contained in cq2 -> find mapping from cq2 to
     val fromBody = cq2.bodyAtoms
     val toBody = cq1.bodyAtoms
-    log(s"q1 is: $cq1")
-    log(s"q2 is: $cq2")
+    // TestLogger administration
+    val fileName = s"test-containment-${cq1.queryId}-${cq2.queryId}.txt"
+    TestLogger.setFileName(fileName)
+    TestLogger.log(s"q1 is: $cq1.")
+    TestLogger.log(s"q2 is: $cq2.")
     // only start verification if headsize of cq1 and cq2 is equal.
     if (checkHeadSize(cq1, cq2)){
       val homomorphism = makeMapping(fromBody, toBody)
       // if test to organize logging into output-containment.txt
       if (isValidMapping(homomorphism, fromBody, toBody)){
-        log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
         TestLogger.log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
-        log("------------------------------------------------------------------------------------------------------------")
         true
       } else {
         // we know the mapping is not valid -> the canonical database is the grounding of cq1 into facts.
-        log("A possible counterexample database D contains the following atoms: ")
+        TestLogger.log("A possible counterexample database D contains the following atoms: ")
         groundQuery(cq1)
-        log("------------------------------------------------------------------------------------------------------------")
         false
       }
     } else {
@@ -214,11 +212,6 @@ object Containment {
     }
   }
 
-  def log(line: String): Unit = {
-    val txtOutputPath= os.pwd / "output"
-    val path: os.Path = txtOutputPath / "output-containment.txt"
-    os.write.append(path, line + "\n")
-  }
 }
 
 // F5. Minimality Test
@@ -262,14 +255,19 @@ object Minimality{
   }
   
   def isMinimal(cq: ConjunctiveQuery) = {
+    // TestLogger administration
     val fileName = s"test-minimality-${cq.queryId}.txt"
     TestLogger.setFileName(fileName)
     TestLogger.log(s"Minimization for query: $cq.")
+    // extract values
     val cqBody = cq.bodyAtoms
     val cqHead = cq.headAtom
+    // if possible minimize the body
     val cqCore = ConjunctiveQuery(cq.queryId, cqHead, minimizeBody(cqBody, cqHead))
+
     TestLogger.log(s"Current query is: $cqCore")
     TestLogger.log("No more atoms can be removed.")
+
     // if cqCore equals cq no minimization took place => cq is minimal.
     // cqCore == cq
     if (cqCore == cq){
@@ -291,12 +289,12 @@ object Minimality{
      println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
  }
 
-  //println(Containment.isContainedIn(query8,query9))
-  //println(Containment.isContainedIn(query5,query6))
+  println(Containment.isContainedIn(query8,query9))
+  println(Containment.isContainedIn(query5,query6))
 
-  println(Minimality.isMinimal(query4))
+  //println(Minimality.isMinimal(query4))
   //Minimality.isMinimal(query8)
-   println(Minimality.isMinimal(query7))
+  // println(Minimality.isMinimal(query7))
 
   
   
