@@ -1,0 +1,6 @@
+Minimization for query: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(z))), Atom(E,List(Variable(z), Variable(w))))).
+Remove atom: Atom(E,List(Variable(z), Variable(z)))
+Current query is: ConjunctiveQuery(2,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(w))))).
+Remove atom: Atom(E,List(Variable(z), Variable(w)))
+Current query is: ConjunctiveQuery(8,Atom(answer,List(Variable(y), Variable(z))),List(Atom(E,List(Variable(y), Variable(z)))))
+No more atoms can be removed.

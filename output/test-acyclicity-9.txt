@@ -1,18 +1,9 @@
 GYO for query: List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(y))), Atom(E,List(Variable(y), Variable(w)))).
-Remove ear: AtomSet(E,Set(Variable(x), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(z)))
+Remove ear: AtomSet(E,Set(Variable(x), Variable(y))) with witness Some(AtomSet(E,Set(Variable(y), Variable(z)))).get
 Current query is: List(AtomSet(E,Set(Variable(y), Variable(z))), AtomSet(E,Set(Variable(z), Variable(y))), AtomSet(E,Set(Variable(y), Variable(w))))
-Remove ear: AtomSet(E,Set(Variable(y), Variable(z)))with witnessAtomSet(E,Set(Variable(z), Variable(y)))
+Remove ear: AtomSet(E,Set(Variable(y), Variable(z))) with witness Some(AtomSet(E,Set(Variable(z), Variable(y)))).get
 Current query is: List(AtomSet(E,Set(Variable(z), Variable(y))), AtomSet(E,Set(Variable(y), Variable(w))))
-Remove ear: AtomSet(E,Set(Variable(z), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(w)))
-Current query is: List(AtomSet(E,Set(Variable(y), Variable(w))))
-Remove earAtomSet(E,Set(Variable(y), Variable(w)))
-Current query is: empty
-GYO for query: List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z))), Atom(E,List(Variable(z), Variable(y))), Atom(E,List(Variable(y), Variable(w)))).
-Remove ear: AtomSet(E,Set(Variable(x), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(z)))
-Current query is: List(AtomSet(E,Set(Variable(y), Variable(z))), AtomSet(E,Set(Variable(z), Variable(y))), AtomSet(E,Set(Variable(y), Variable(w))))
-Remove ear: AtomSet(E,Set(Variable(y), Variable(z)))with witnessAtomSet(E,Set(Variable(z), Variable(y)))
-Current query is: List(AtomSet(E,Set(Variable(z), Variable(y))), AtomSet(E,Set(Variable(y), Variable(w))))
-Remove ear: AtomSet(E,Set(Variable(z), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(w)))
+Remove ear: AtomSet(E,Set(Variable(z), Variable(y))) with witness Some(AtomSet(E,Set(Variable(y), Variable(w)))).get
 Current query is: List(AtomSet(E,Set(Variable(y), Variable(w))))
 Remove ear: AtomSet(E,Set(Variable(y), Variable(w)))
 Current query is: empty

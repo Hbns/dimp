@@ -2,6 +2,8 @@
 import Queries._
 import Containment.isContainedIn
 import os.Path
+import GYO.isAcyclic
+import Minimality.isMinimal
 
 // Trait for terms, which can be either constants or variables
 sealed trait Term
@@ -58,12 +60,31 @@ object TestLogger extends Logger {
 
   def setFileName(name: String): Unit = {
     val outputDir = os.pwd / "output"
+    if (!os.exists(outputDir)) os.makeDir.all(outputDir)
     filePath = Some(outputDir / name)
   }
 
-  def log(line: String): Unit ={
+  def setFilePath(path: String): Unit = {
+    filePath = Some(Path(path))
+  }
+
+  def getFileName(): String = {
     filePath match {
-      case Some(path) => os.write.append(path, line + "\n")
+      case Some(path) => path.toString
+      case None => "No file path set"
+    }
+  }
+
+  def log(line: String): Unit = this.synchronized{
+    filePath match {
+      case Some(path) => 
+        try {
+        os.write.append(path, line + "\n")
+      } catch {
+        case e: Exception =>
+          println(s"Failed to write to log file: ${e.getMessage}")
+          throw e
+      }
       case None => throw new IllegalStateException("File path is not set. Call setFileName first.") 
     }
   }
@@ -100,8 +121,8 @@ object GYO {
     
         witness match {
           case Some(_) =>
-            TestLogger.log("Remove ear: " + head + "with witness" + witness.get)
-            TestLogger.log("Current query is: " + restOfAtoms)
+            TestLogger.log(s"Remove ear: $head with witness $witness.get")
+            TestLogger.log(s"Current query is: $restOfAtoms")
             reduceQuery(restOfAtoms, visited)
           case None => 
             reduceQuery(restOfAtoms :+ head, visited +head)
@@ -111,7 +132,7 @@ object GYO {
         
   } 
   
-  def isAcyclic(cq: ConjunctiveQuery): Boolean = {
+  def isAcyclic(cq: ConjunctiveQuery): Int = {
     val bodyAtoms = cq.bodyAtoms
     // convert terms form List[Terms] to Set[Terms]
     val bodyAtomsAsSet = bodyAtoms.map { atom =>
@@ -123,9 +144,9 @@ object GYO {
     TestLogger.log(s"GYO for query: $bodyAtoms.")
     
     val reducedQuery = reduceQuery(body = bodyAtomsAsSet, Set.empty) 
-    reducedQuery.isEmpty
-    
-  }
+    if (reducedQuery.isEmpty) 1 else 0
+  } 
+  
 }
 
 // algorithm does not check for relation arity, 
@@ -235,6 +256,7 @@ object Minimality{
   // minimize the Body for as long we findAtom.
   @scala.annotation.tailrec
   def minimizeBody(body: List[Atom], head: Atom): List[Atom] = {
+    val filePath = TestLogger.getFileName()
     findAtom(body, head) match {
       case Some(atom) =>
         TestLogger.log(s"Remove atom: $atom")
@@ -243,6 +265,7 @@ object Minimality{
         val cq1 = ConjunctiveQuery(1, head, body)
         val cq2 = ConjunctiveQuery(2, head, minimizedBody)
         if ((isContainedIn(cq1, cq2)) && minimizedBody.length > 1){
+        TestLogger.setFilePath(filePath)
         TestLogger.log(s"Current query is: $cq2.")
         minimizeBody(minimizedBody, head) 
         } else { 
@@ -253,48 +276,60 @@ object Minimality{
         body
     }
   }
+
+  def computeCore(cq: ConjunctiveQuery): ConjunctiveQuery = {
+    // extract values
+    val cqBody = cq.bodyAtoms
+    val cqHead = cq.headAtom
+    // if not selfjoinfree minimizeBody.
+    isSelfJoinFree(cqBody) match {
+      case true => ConjunctiveQuery(cq.queryId, cqHead, cqBody)
+      case false => ConjunctiveQuery(cq.queryId, cqHead, minimizeBody(cqBody, cqHead))
+    }
+  }
   
   def isMinimal(cq: ConjunctiveQuery) = {
     // TestLogger administration
     val fileName = s"test-minimality-${cq.queryId}.txt"
     TestLogger.setFileName(fileName)
     TestLogger.log(s"Minimization for query: $cq.")
-    // extract values
-    val cqBody = cq.bodyAtoms
-    val cqHead = cq.headAtom
-    // if possible minimize the body
-    val cqCore = ConjunctiveQuery(cq.queryId, cqHead, minimizeBody(cqBody, cqHead))
-
-    TestLogger.log(s"Current query is: $cqCore")
-    TestLogger.log("No more atoms can be removed.")
-
+    val cqCore = computeCore(cq)
     // if cqCore equals cq no minimization took place => cq is minimal.
-    // cqCore == cq
     if (cqCore == cq){
       // delete report since: if running isMinimal on the query returns 1 no report is generated.
       TestLogger.deleteFile()
-      true
+      1
     } else {
-      false
+      TestLogger.setFileName(fileName)
+      TestLogger.log(s"Current query is: $cqCore")
+      TestLogger.log(s"No more atoms can be removed.")
+      0
     }    
   }
 }
 
 // Example usage
 @main def main(): Unit = {
+
+val csvMainFileName = os.pwd / "output" / "main-output.csv"
+val csvContainmentFileName = os.pwd / "output" / "containment-output.csv"
  
 // all queries..
  val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
- for (query <- queries) {
-     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
- }
+ //for (query <- queries) {
+//     println("qid: " + query.queryId + "," + GYO.isAcyclic(query))  
+// }
+ val mainOutputHeader = List("queryId", "isAcyclic", "isMinimal")
+ val mainOutput = queries.map {query => (query.queryId, isAcyclic(query), isMinimal(query))}
+ val containmentHeader = List("queryId1", "queryId2", "isContainedIn")
+ //val containmentOutput = queries.map {query => (query.queryId, isAcyclic(query), isMinimal(query))}
 
-  println(Containment.isContainedIn(query8,query9))
-  println(Containment.isContainedIn(query5,query6))
+  println(mainOutput)
+  //println(Containment.isContainedIn(query5,query6))
 
   //println(Minimality.isMinimal(query4))
   //Minimality.isMinimal(query8)
-  // println(Minimality.isMinimal(query7))
+  //Minimality.isMinimal(query1)
 
   
   

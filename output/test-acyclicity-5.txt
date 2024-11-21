@@ -1,10 +1,5 @@
 GYO for query: List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))).
-Remove ear: AtomSet(E,Set(Variable(x), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(z)))
-Current query is: List(AtomSet(E,Set(Variable(y), Variable(z))))
-Remove earAtomSet(E,Set(Variable(y), Variable(z)))
-Current query is: empty
-GYO for query: List(Atom(E,List(Variable(x), Variable(y))), Atom(E,List(Variable(y), Variable(z)))).
-Remove ear: AtomSet(E,Set(Variable(x), Variable(y)))with witnessAtomSet(E,Set(Variable(y), Variable(z)))
+Remove ear: AtomSet(E,Set(Variable(x), Variable(y))) with witness Some(AtomSet(E,Set(Variable(y), Variable(z)))).get
 Current query is: List(AtomSet(E,Set(Variable(y), Variable(z))))
 Remove ear: AtomSet(E,Set(Variable(y), Variable(z)))
 Current query is: empty
