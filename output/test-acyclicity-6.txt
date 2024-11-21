@@ -1,5 +1,0 @@
-GYO for query: List(Atom(E,List(Variable(w), Variable(w))), Atom(E,List(Variable(w), Variable(u)))).
-Remove ear: AtomSet(E,Set(Variable(w))) with witness Some(AtomSet(E,Set(Variable(w), Variable(u)))).get
-Current query is: List(AtomSet(E,Set(Variable(w), Variable(u))))
-Remove ear: AtomSet(E,Set(Variable(w), Variable(u)))
-Current query is: empty

@@ -1,3 +1,0 @@
-GYO for query: List(Atom(E,List(Variable(x), Variable(x)))).
-Remove ear: AtomSet(E,Set(Variable(x)))
-Current query is: empty

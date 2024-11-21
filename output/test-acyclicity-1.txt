@@ -1,7 +1,0 @@
-GYO for query: List(Atom(A,List(Variable(x), Variable(y))), Atom(B,List(Variable(y), Variable(z))), Atom(C,List(Variable(z), Variable(w), Variable(u), Constant(V)))).
-Remove ear: AtomSet(A,Set(Variable(x), Variable(y))) with witness Some(AtomSet(B,Set(Variable(y), Variable(z)))).get
-Current query is: List(AtomSet(B,Set(Variable(y), Variable(z))), AtomSet(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
-Remove ear: AtomSet(B,Set(Variable(y), Variable(z))) with witness Some(AtomSet(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))).get
-Current query is: List(AtomSet(C,Set(Variable(z), Variable(w), Variable(u), Constant(V))))
-Remove ear: AtomSet(C,Set(Variable(z), Variable(w), Variable(u), Constant(V)))
-Current query is: empty

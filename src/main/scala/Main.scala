@@ -181,7 +181,6 @@ object Containment {
         relationName = atomFrom.relationName,
         terms = atomFrom.terms.map(term => mapping.getMapping(term).getOrElse(term)))
       // does the atom with terms replaced from mapping exist in toBody?
-      TestLogger.log(s"mapped: $mappedAtom")
       toBody.contains(mappedAtom)
      }
   }
@@ -205,7 +204,7 @@ object Containment {
     TestLogger.log(s"However, ($cqHeadGrounded) is not in q2(D) since q2(D) is empty.")
   }
 
-  def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Boolean = {
+  def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Int = {
     // cq1 contained in cq2 -> find mapping from cq2 to
     val fromBody = cq2.bodyAtoms
     val toBody = cq1.bodyAtoms
@@ -220,16 +219,17 @@ object Containment {
       // if test to organize logging into output-containment.txt
       if (isValidMapping(homomorphism, fromBody, toBody)){
         TestLogger.log(s"A possible homomorphism h from q2 to q1 contains the following mappings: \n" + homomorphism.toString)
-        true
+        1
       } else {
         // we know the mapping is not valid -> the canonical database is the grounding of cq1 into facts.
         TestLogger.log("A possible counterexample database D contains the following atoms: ")
         groundQuery(cq1)
-        false
+        0
       }
     } else {
       // headsizes do not match.
-      false
+      TestLogger.log("Headsizes do not match, cannot be contained")
+      0
     }
   }
 
@@ -262,9 +262,9 @@ object Minimality{
         TestLogger.log(s"Remove atom: $atom")
         val minimizedBody = body.filterNot(_ == atom)
         // need cq Atom, not AtomSet :-(
-        val cq1 = ConjunctiveQuery(1, head, body)
-        val cq2 = ConjunctiveQuery(2, head, minimizedBody)
-        if ((isContainedIn(cq1, cq2)) && minimizedBody.length > 1){
+        val cq1 = ConjunctiveQuery(100, head, body)
+        val cq2 = ConjunctiveQuery(200, head, minimizedBody)
+        if ((isContainedIn(cq1, cq2) != 0) && minimizedBody.length > 1){
         TestLogger.setFilePath(filePath)
         TestLogger.log(s"Current query is: $cq2.")
         minimizeBody(minimizedBody, head) 
@@ -322,9 +322,14 @@ val csvContainmentFileName = os.pwd / "output" / "containment-output.csv"
  val mainOutputHeader = List("queryId", "isAcyclic", "isMinimal")
  val mainOutput = queries.map {query => (query.queryId, isAcyclic(query), isMinimal(query))}
  val containmentHeader = List("queryId1", "queryId2", "isContainedIn")
- //val containmentOutput = queries.map {query => (query.queryId, isAcyclic(query), isMinimal(query))}
+ val containmentOutput = queries.flatMap { cq1 =>
+  queries.filter(_ != cq1).map { cq2 =>
+    (cq1.queryId, cq2.queryId, isContainedIn(cq1, cq2))
+  }
+}
 
   println(mainOutput)
+  println(containmentOutput)
   //println(Containment.isContainedIn(query5,query6))
 
   //println(Minimality.isMinimal(query4))
