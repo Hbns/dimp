@@ -21,7 +21,6 @@ case class ConjunctiveQuery(
   headAtom: Atom,
   bodyAtoms: List[Atom]
 )
-
 // F2. Homomorphism Data Structure
 class Homomorphism(private val mapping: Map[Term, Term] = Map.empty) {
   def addMapping(from: Term, to: Term): Homomorphism = {
@@ -158,7 +157,7 @@ object Containment {
   }
   // call isContained to verify containment of two conjunctive queries.
   def isContainedIn(cq1: ConjunctiveQuery, cq2: ConjunctiveQuery): Int = {
-    // cq1 contained in cq2 -> find mapping from cq2 to
+    // cq1 contained in cq2 -> find mapping from cq2 to cq1
     val fromBody = cq2.bodyAtoms
     val toBody = cq1.bodyAtoms
     // TestLogger administration
@@ -262,7 +261,6 @@ object Minimality{
   }
 }
 
-// Example usage
 @main def main(): Unit = {
 
 // Running main will generate main-output.csv and containment-output.csv
