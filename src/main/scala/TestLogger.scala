@@ -1,6 +1,6 @@
 import os.Path
 
-// logger to write output txt/csv files
+// logger to write output .txt/.csv files.
 trait Logger {
   def log(line: String): Unit
 }

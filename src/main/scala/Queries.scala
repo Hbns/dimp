@@ -8,7 +8,7 @@ object Queries {
   val u = Variable("u")
   val V = Constant("V")
 
-// Define conjunctive query's
+// Define the test cq from the project description.
   val query1 = ConjunctiveQuery(
     queryId = 1,
     headAtom = Atom("answer", List()),
