@@ -1,4 +1,4 @@
-// all queries are in Queries.scala
+// all test queries are defined in Queries.scala
 import Queries._
 import TestLogger._
 import Containment.isContainedIn
@@ -12,7 +12,7 @@ case class Variable(name: String) extends Term
 
 // Case class for atoms, which consist of a relation name and a tuple of terms
 case class Atom(relationName: String, terms: List[Term])
-// Using Set[Term] for GYO but List for containment..
+// Using Set[Term] for GYO but List[Term] for containment..
 case class AtomSet(relationName: String, terms: Set[Term])
 
 // F1. Query Data Structure
@@ -55,13 +55,13 @@ object GYO {
   @scala.annotation.tailrec
   def reduceQuery(body: List[AtomSet], visited: Set[AtomSet]): List[AtomSet] = {
     if (visited.contains(body.head)){
-      // visited before
+      // visited before, stop recursion.
       body
     } else {
     body match {
       case Nil => body
       case head :: Nil => 
-        // single atomic formula, has no cycle, return empty list
+        // single atomic cq, has no cycle, return empty list
         TestLogger.log("Remove ear: " + head)
         TestLogger.log("Current query is: empty")
         List.empty[AtomSet]
@@ -98,7 +98,7 @@ object GYO {
     val fileName = s"test-acyclicity-${cq.queryId}.txt"
     TestLogger.setFileName(fileName)
     TestLogger.log(s"GYO for query: $bodyAtoms.")
-    
+    // try to reduce query to empty query by removing ears.
     val reducedQuery = reduceQuery(body = bodyAtomsAsSet, Set.empty) 
     if (reducedQuery.isEmpty) 1 else 0
   } 
@@ -147,7 +147,7 @@ object Containment {
       }.mkString(",")
 
     val cqHeadGrounded = groundTerms(cq.headAtom.terms)
-    
+    // log to .txt file
     cq.bodyAtoms.foreach { atom =>
       val grounded = groundTerms(atom.terms)
       TestLogger.log(s"${atom.relationName}($grounded)")
@@ -214,17 +214,17 @@ object Minimality{
       case Some(atom) =>
         TestLogger.log(s"Remove atom: $atom")
         val minimizedBody = body.filterNot(_ == atom)
-        // need cq Atom, not AtomSet :-(
         val cq1 = ConjunctiveQuery(100, head, body)
         val cq2 = ConjunctiveQuery(200, head, minimizedBody)
+        // if contained and more atoms left in body, recurse.
         if ((isContainedIn(cq1, cq2) != 0) && minimizedBody.length > 1){
+        // write to .txt
         TestLogger.setFilePath(filePath)
         TestLogger.log(s"Current query is: $cq2.")
         minimizeBody(minimizedBody, head) 
         } else { 
           minimizedBody
         }
-        
       case None => 
         body
     }
@@ -249,7 +249,7 @@ object Minimality{
     val cqCore = computeCore(cq)
     // if cqCore equals cq no minimization took place => cq is minimal.
     if (cqCore == cq){
-      // delete report since: if running isMinimal on the query returns 1 no report is generated.
+      // delete report since: if running isMinimal on the query returns 1 no report should be generated.
       TestLogger.deleteFile()
       1
     } else {
@@ -264,13 +264,13 @@ object Minimality{
 @main def main(): Unit = {
 
 // Running main will generate main-output.csv and containment-output.csv
-// Since this will call isAcyclic, isMinimal and isContained the individual reports
+// Since this will call isAcyclic, isMinimal and isContained the individual reports (.txt)
 // for each call will be created in the same directory 'output'
 
 // all queries in a list
 val queries = List(query1, query2, query3, query4, query5, query6, query7, query8, query9, query10)
 
-// compute output for both files
+// compute data for both output files
 val mainOutput = queries.map {query => (query.queryId, isAcyclic(query), isMinimal(query))}
 val containmentOutput = queries.flatMap { cq1 =>
   queries.filter(_ != cq1).map { cq2 =>
@@ -287,6 +287,4 @@ val containmentHeader = List("queryId1", "queryId2", "isContainedIn")
 TestLogger.generateCsvFile(csvMainFileName, mainOutputHeader, mainOutput)
 TestLogger.generateCsvFile(csvContainmentFileName, containmentHeader, containmentOutput)
 
-//println(mainOutput)
-//println(containmentOutput)
 }
