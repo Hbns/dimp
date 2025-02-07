@@ -1,4 +1,4 @@
-## sbt project compiled with Scala 3
+## Minimality, Containment, Acyclicity for conjunctive queries.
 
 ### Usage
 
